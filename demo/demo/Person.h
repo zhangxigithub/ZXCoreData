@@ -1,0 +1,28 @@
+//
+//  Person.h
+//  core
+//
+//  Created by 张玺 on 13-4-6.
+//  Copyright (c) 2013年 张玺. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+#import <CoreData/CoreData.h>
+
+@class Car;
+
+@interface Person : NSManagedObject
+
+@property (nonatomic, retain) NSString * name;
+@property (nonatomic, retain) NSNumber * age;
+@property (nonatomic, retain) NSSet *ownCar;
+@end
+
+@interface Person (CoreDataGeneratedAccessors)
+
+- (void)addOwnCarObject:(Car *)value;
+- (void)removeOwnCarObject:(Car *)value;
+- (void)addOwnCar:(NSSet *)values;
+- (void)removeOwnCar:(NSSet *)values;
+
+@end

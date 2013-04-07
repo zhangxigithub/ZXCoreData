@@ -22,6 +22,19 @@
 @property (nonatomic, strong, readonly) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, strong, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
+//临时上下文，用来生成临时对象，不会被写入磁盘
+@property (nonatomic, strong, readonly) NSManagedObjectContext *tempContext;
+
+
+//生成对象，并存入库
+-(id)objectForName:(NSString *)name;
+//生成临时对象，
+-(id)tempObjectForName:(NSString *)name;
+
+
+- (NSArray *)executeFetchRequest:(NSFetchRequest *)request error:(NSError **)error; 
+
+
 - (NSURL *)applicationDocumentsDirectory;
 - (void)saveContext;
 @end

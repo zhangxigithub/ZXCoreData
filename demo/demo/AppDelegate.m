@@ -12,38 +12,46 @@
 
 @implementation AppDelegate
 
+-(void)next
+{
+    NSLog(@"ff");
+}
+
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.viewController = [[UIViewController alloc] init];
+    
+    [self.viewController.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(next)]];
+    
     self.viewController.view.backgroundColor = [UIColor grayColor];
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
     
+
     
     //----------------------
     helper = [[ZXCoreData alloc] init];
     
-    for(int i =0;i<50;i++)
-    {
-        Person *person = [NSEntityDescription insertNewObjectForEntityForName:@"Person"
-                                                       inManagedObjectContext:helper.managedObjectContext];
-        
-        
-        person.name = @"张玺";
-        person.age  = [NSNumber numberWithInt:i];
-    }
+//    for(int i =0;i<50;i++)
+//    {
+//        Person *person = [helper objectForName:@"Person"];
+//        
+//        person.name = @"张玺";
+//        person.age  = [NSNumber numberWithInt:i];
+//    }
     
-    [helper saveContext];
-    
+
+
     
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Person"];
-    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"age BETWEEN {10,15}"]];
+
     
-    NSArray *fetchedObjects = [helper.managedObjectContext executeFetchRequest:fetchRequest error:nil];
+    NSArray *fetchedObjects = [helper executeFetchRequest:fetchRequest error:nil];
     
     
-    for (Person *person in fetchedObjects) {
+    for (Person *person in [fetchedObjects sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"age" ascending:YES]]]) {
 
         NSLog(@"%@:%@",person.name,person.age);
     }

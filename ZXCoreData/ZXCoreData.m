@@ -11,8 +11,9 @@
 
 @implementation ZXCoreData
 
-@synthesize managedObjectModel = _managedObjectModel;
-@synthesize managedObjectContext = _managedObjectContext;
+@synthesize managedObjectModel         = _managedObjectModel;
+@synthesize managedObjectContext       = _managedObjectContext;
+@synthesize tempContext                = _tempContext;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 
 
@@ -42,7 +43,19 @@
 #pragma mark -
 #pragma mark Core Data stack
 
-
+- (NSManagedObjectContext *) tempContext
+{
+    if (_tempContext != nil) {
+        return _tempContext;
+    }
+    
+    NSPersistentStoreCoordinator *coordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: [self managedObjectModel]];
+    if (coordinator != nil) {
+        _tempContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+        [_tempContext setPersistentStoreCoordinator: coordinator];
+    }
+    return _tempContext;
+}
 - (NSManagedObjectContext *) managedObjectContext
 {
     if (_managedObjectContext != nil) {
@@ -75,7 +88,7 @@
     NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@",kZXCoreDataFileName,kZXCoreDataFileExtension]];
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    // If the expected store doesn't exist, copy the default store.
+
     if (![fileManager fileExistsAtPath:[storeURL path]]) {
       
         /**
@@ -100,6 +113,19 @@
     return _persistentStoreCoordinator;
 }
 
+-(id)objectForName:(NSString *)name
+{
+    return [NSEntityDescription insertNewObjectForEntityForName:name inManagedObjectContext:self.managedObjectContext];
+}
+-(id)tempObjectForName:(NSString *)name
+{
+    return [NSEntityDescription insertNewObjectForEntityForName:name inManagedObjectContext:self.tempContext];
+}
+
+- (NSArray *)executeFetchRequest:(NSFetchRequest *)request error:(NSError **)error
+{
+    return [self.managedObjectContext executeFetchRequest:request error:error];
+}
 
 #pragma mark -
 #pragma mark Application's documents directory

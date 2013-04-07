@@ -24,36 +24,28 @@
     //----------------------
     helper = [[ZXCoreData alloc] init];
     
-    Person *person = [NSEntityDescription insertNewObjectForEntityForName:@"Person"
-                                                   inManagedObjectContext:helper.managedObjectContext];
-    
-    
-    person.name = @"zx";
-    person.age  = @24;
-    
-    
-    for(int i =0 ;i<10;i++)
+    for(int i =0;i<50;i++)
     {
         Person *person = [NSEntityDescription insertNewObjectForEntityForName:@"Person"
                                                        inManagedObjectContext:helper.managedObjectContext];
         
         
-        person.name = @"zx";
+        person.name = @"张玺";
         person.age  = [NSNumber numberWithInt:i];
     }
+    
     [helper saveContext];
     
     
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Person"];
-
-    [fetchRequest setFetchOffset:9];
-    [fetchRequest setFetchLimit:6];
-    
+    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"age BETWEEN {10,15}"]];
     
     NSArray *fetchedObjects = [helper.managedObjectContext executeFetchRequest:fetchRequest error:nil];
     
-    for (NSManagedObject *info in fetchedObjects) {
-        NSLog(@"%@",info);
+    
+    for (Person *person in fetchedObjects) {
+
+        NSLog(@"%@:%@",person.name,person.age);
     }
     
     //----------------------

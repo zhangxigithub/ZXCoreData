@@ -112,7 +112,16 @@
     
     return _persistentStoreCoordinator;
 }
-
+-(void)performSafeBlock:(void(^)())block
+{
+    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc]
+                                   initWithConcurrencyType:NSMainQueueConcurrencyType];
+    
+    [moc performBlock:^{
+        moc.parentContext = self.managedObjectContext;
+        block();
+    }];
+}
 -(id)objectForName:(NSString *)name
 {
     return [NSEntityDescription insertNewObjectForEntityForName:name inManagedObjectContext:self.managedObjectContext];

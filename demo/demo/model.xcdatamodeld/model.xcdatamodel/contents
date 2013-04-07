@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2061" systemVersion="12D78" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="12D78" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Car" representedClassName="Car" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="owner" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Person" inverseName="ownCar" inverseEntity="Person" syncable="YES"/>
@@ -13,7 +13,7 @@
         </fetchedProperty>
     </entity>
     <elements>
-        <element name="Person" positionX="-101" positionY="-54" width="128" height="116"/>
-        <element name="Car" positionX="169" positionY="99" width="128" height="73"/>
+        <element name="Car" positionX="196" positionY="99" width="128" height="73"/>
+        <element name="Person" positionX="-497" positionY="-278" width="128" height="116"/>
     </elements>
 </model>

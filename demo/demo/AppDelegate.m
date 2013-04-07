@@ -16,6 +16,7 @@
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.viewController = [[UIViewController alloc] init];
+    self.viewController.view.backgroundColor = [UIColor grayColor];
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
     

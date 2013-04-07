@@ -7,7 +7,7 @@
 //
 
 
-#define kZXCoreDataModalName      @"modal"
+#define kZXCoreDataModalName      @"model"
 #define kZXCoreDataModalExtension @"momd"
 #define kZXCoreDataFileName       @"zxcoredata"
 #define kZXCoreDataFileExtension  @"sqlite"

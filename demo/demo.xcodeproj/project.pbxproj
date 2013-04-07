@@ -18,7 +18,7 @@
 		33DE76371710708200164F0C /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 33DE76361710708200164F0C /* Default-568h@2x.png */; };
 		33DE76461710710900164F0C /* ZXCoreData.m in Sources */ = {isa = PBXBuildFile; fileRef = 33DE76451710710900164F0C /* ZXCoreData.m */; };
 		33DE76481710713500164F0C /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33DE76471710713500164F0C /* CoreData.framework */; };
-		33DE764B1710740000164F0C /* modal.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 33DE76491710740000164F0C /* modal.xcdatamodeld */; };
+		33DE764B1710740000164F0C /* model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 33DE76491710740000164F0C /* model.xcdatamodeld */; };
 		33DE76501710742A00164F0C /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = 33DE764E1710742900164F0C /* Person.m */; };
 		33DE76511710742A00164F0C /* Car.m in Sources */ = {isa = PBXBuildFile; fileRef = 33DE764F1710742A00164F0C /* Car.m */; };
 /* End PBXBuildFile section */
@@ -40,7 +40,7 @@
 		33DE76441710710900164F0C /* ZXCoreData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZXCoreData.h; sourceTree = "<group>"; };
 		33DE76451710710900164F0C /* ZXCoreData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZXCoreData.m; sourceTree = "<group>"; };
 		33DE76471710713500164F0C /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		33DE764A1710740000164F0C /* modal.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = modal.xcdatamodel; sourceTree = "<group>"; };
+		33DE764A1710740000164F0C /* model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = model.xcdatamodel; sourceTree = "<group>"; };
 		33DE764C1710742900164F0C /* Car.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Car.h; sourceTree = "<group>"; };
 		33DE764D1710742900164F0C /* Person.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
 		33DE764E1710742900164F0C /* Person.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
@@ -94,7 +94,7 @@
 			isa = PBXGroup;
 			children = (
 				33DE7643171070F400164F0C /* ZXCoreData */,
-				33DE76521710761B00164F0C /* modal */,
+				33DE76521710761B00164F0C /* model */,
 				33DE762F1710708100164F0C /* AppDelegate.h */,
 				33DE76301710708100164F0C /* AppDelegate.m */,
 				33DE76271710708100164F0C /* Supporting Files */,
@@ -126,16 +126,16 @@
 			path = ../../ZXCoreData;
 			sourceTree = "<group>";
 		};
-		33DE76521710761B00164F0C /* modal */ = {
+		33DE76521710761B00164F0C /* model */ = {
 			isa = PBXGroup;
 			children = (
-				33DE76491710740000164F0C /* modal.xcdatamodeld */,
+				33DE76491710740000164F0C /* model.xcdatamodeld */,
 				33DE764C1710742900164F0C /* Car.h */,
 				33DE764F1710742A00164F0C /* Car.m */,
 				33DE764D1710742900164F0C /* Person.h */,
 				33DE764E1710742900164F0C /* Person.m */,
 			);
-			name = modal;
+			name = model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -206,7 +206,7 @@
 				33DE762D1710708100164F0C /* main.m in Sources */,
 				33DE76311710708100164F0C /* AppDelegate.m in Sources */,
 				33DE76461710710900164F0C /* ZXCoreData.m in Sources */,
-				33DE764B1710740000164F0C /* modal.xcdatamodeld in Sources */,
+				33DE764B1710740000164F0C /* model.xcdatamodeld in Sources */,
 				33DE76501710742A00164F0C /* Person.m in Sources */,
 				33DE76511710742A00164F0C /* Car.m in Sources */,
 			);
@@ -323,17 +323,18 @@
 				33DE76421710708200164F0C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		33DE76491710740000164F0C /* modal.xcdatamodeld */ = {
+		33DE76491710740000164F0C /* model.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				33DE764A1710740000164F0C /* modal.xcdatamodel */,
+				33DE764A1710740000164F0C /* model.xcdatamodel */,
 			);
-			currentVersion = 33DE764A1710740000164F0C /* modal.xcdatamodel */;
-			path = modal.xcdatamodeld;
+			currentVersion = 33DE764A1710740000164F0C /* model.xcdatamodel */;
+			path = model.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

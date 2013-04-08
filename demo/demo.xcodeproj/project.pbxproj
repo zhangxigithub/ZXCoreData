@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		331A88711712EDB000424A84 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 331A886F1712EDB000424A84 /* ViewController.m */; };
+		331A88721712EDB000424A84 /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 331A88701712EDB000424A84 /* ViewController.xib */; };
 		33DE76211710708100164F0C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33DE76201710708100164F0C /* UIKit.framework */; };
 		33DE76231710708100164F0C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33DE76221710708100164F0C /* Foundation.framework */; };
 		33DE76251710708100164F0C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33DE76241710708100164F0C /* CoreGraphics.framework */; };
@@ -33,6 +35,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		331A886E1712EDB000424A84 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		331A886F1712EDB000424A84 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		331A88701712EDB000424A84 /* ViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ViewController.xib; sourceTree = "<group>"; };
 		33DE761D1710708100164F0C /* demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		33DE76201710708100164F0C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		33DE76221710708100164F0C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -128,6 +133,9 @@
 				33DE76521710761B00164F0C /* model */,
 				33DE762F1710708100164F0C /* AppDelegate.h */,
 				33DE76301710708100164F0C /* AppDelegate.m */,
+				331A886E1712EDB000424A84 /* ViewController.h */,
+				331A886F1712EDB000424A84 /* ViewController.m */,
+				331A88701712EDB000424A84 /* ViewController.xib */,
 				33DE76271710708100164F0C /* Supporting Files */,
 			);
 			path = demo;
@@ -250,6 +258,7 @@
 				33DE76331710708200164F0C /* Default.png in Resources */,
 				33DE76351710708200164F0C /* Default@2x.png in Resources */,
 				33DE76371710708200164F0C /* Default-568h@2x.png in Resources */,
+				331A88721712EDB000424A84 /* ViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -275,6 +284,7 @@
 				43A1F7591711557400AB901E /* AFURLConnectionOperation.m in Sources */,
 				43A1F75A1711557400AB901E /* AFXMLRequestOperation.m in Sources */,
 				43A1F75B1711557400AB901E /* UIImageView+AFNetworking.m in Sources */,
+				331A88711712EDB000424A84 /* ViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -354,6 +364,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "demo/demo-Prefix.pch";
 				INFOPLIST_FILE = "demo/demo-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -365,6 +376,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "demo/demo-Prefix.pch";
 				INFOPLIST_FILE = "demo/demo-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

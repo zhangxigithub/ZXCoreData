@@ -19,12 +19,16 @@
 @interface ZXCoreData : NSObject
 
 @property (nonatomic, strong, readonly) NSManagedObjectModel *managedObjectModel;
+@property (atomic,strong,readonly) NSManagedObjectContext *childThreadManagedObjectContext;
 @property (nonatomic, strong, readonly) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, strong, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
 //临时上下文，用来生成临时对象，不会被写入磁盘
 @property (nonatomic, strong, readonly) NSManagedObjectContext *tempContext;
 
+
+
+- (NSManagedObjectContext*)childThreadContext;
 
 
 -(void)performSafeBlock:(void(^)())block;

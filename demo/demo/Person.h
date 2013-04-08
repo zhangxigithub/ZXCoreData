@@ -16,6 +16,9 @@
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSNumber * age;
 @property (nonatomic, retain) NSSet *ownCar;
+
+-(void)config:(NSDictionary *)data;
+
 @end
 
 @interface Person (CoreDataGeneratedAccessors)

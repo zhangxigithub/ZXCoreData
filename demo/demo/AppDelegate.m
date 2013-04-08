@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "ViewController.h"
 #import "Person.h"
 #import "Car.h"
 #import "AFNetworking.h"
@@ -25,7 +26,7 @@ static int i = 0;
 //    [self performSelectorInBackground:@selector(backThread) withObject:nil];
 //    [self performSelectorInBackground:@selector(backThread) withObject:nil];
 //    [self performSelectorInBackground:@selector(backThread) withObject:nil];
-//    [self performSelectorInBackground:@selector(backThread) withObject:nil];
+    //[self performSelectorInBackground:@selector(backThread) withObject:nil];
     
     
     [self backThread];
@@ -34,21 +35,18 @@ static int i = 0;
 -(void)backThread
 {
     
-    if([NSThread isMainThread])
+    //if([NSThread isMainThread])
     {
-        //MAIN(^{
+        MAIN(^{
         
         
-        BACK(^{
-        for(int i=0;i<2;i++)
+
+        for(int i=0;i<200;i++)
         {
-            
             Person *person = [helper objectForName:@"Person"];
             person.name = @"张玺";
             person.age  = @10;
         }
-        });
-
         /*
             for(int i=0;i<999;i++)
             {
@@ -70,7 +68,7 @@ static int i = 0;
             
             
         
-       // });
+        });
     }
     
 
@@ -92,7 +90,7 @@ static int i = 0;
     /*
     NSManagedObjectContext *moc = [[NSManagedObjectContext alloc]
                                    initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-    
+
     moc.parentContext = helper.managedObjectContext;
     
     [moc performBlock:^{
@@ -112,8 +110,10 @@ static int i = 0;
 }
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    
+    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.viewController = [[UIViewController alloc] init];
+    self.viewController = [[ViewController alloc] init];
     
     [self.viewController.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(next)]];
     
@@ -122,31 +122,123 @@ static int i = 0;
     [self.window makeKeyAndVisible];
     
 
+    
+    
+    
+    
+    NSDate *date1 = [NSDate date];
+    
+
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Person"];
+    NSArray *array = [helper executeFetchRequest:request error:nil];
+    NSLog(@"count:%d",array.count);
+    
+    
+    NSDate *date2 = [NSDate date];
+    NSLog(@"%f",[date2 timeIntervalSinceDate:date1]);
+    
     //[self performSelectorInBackground:@selector(backThread) withObject:nil];
     //----------------------
     helper = [[ZXCoreData alloc] init];
     
-//    for(int i =0;i<50;i++)
+//    NSDate *date1 = [NSDate date];
+//    for(int i =0;i<20;i++)
 //    {
 //        Person *person = [helper objectForName:@"Person"];
 //        
 //        person.name = @"张玺";
 //        person.age  = [NSNumber numberWithInt:i];
 //    }
-    
+//    NSDate *date2 = [NSDate date];
+//    NSLog(@"%f",[date2 timeIntervalSinceDate:date1]);
 
     
 
     NSLog(@"start");
     //[self performSelectorInBackground:@selector(load) withObject:nil];
-    [self load];
+    //[self AFLoad];
     NSLog(@"end");
+    
     
     
     //----------------------
     return YES;
 }
 
+-(void)AFLoad
+{
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://zxapi.sinaapp.com/coredata.php"]];
+    AFJSONRequestOperation *op;
+    op = [AFJSONRequestOperation JSONRequestOperationWithRequest:request
+                                                         success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+                                                             
+} failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+    BACK(^{
+    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+    [moc setParentContext:helper.managedObjectContext];
+    
+    [moc performBlockAndWait:^{
+
+        NSDate *date1 = [NSDate date];
+        for(int i =0;i<8000;i++)
+        {
+            Person *person = [NSEntityDescription insertNewObjectForEntityForName:@"Person"
+                                                           inManagedObjectContext:moc];
+            
+            person.name = @"张玺";
+            person.age  = [NSNumber numberWithInt:i];
+        }
+        NSDate *date2 = [NSDate date];
+        NSLog(@"%f",[date2 timeIntervalSinceDate:date1]);
+        
+        
+        
+    }];
+        MAIN(^{
+        
+            NSLog(@"main");
+        });
+    
+    });
+  //if ([NSThread isMainThread]) ALERT(@"ad main");
+                                                             
+                                                             
+}];
+    [op start];
+    
+//    NSData *data = [NSURLConnection sendSynchronousRequest:request
+//                                             returningResponse:nil
+//                                                         error:nil];
+//        [NSThread sleepForTimeInterval:2];
+//        NSString *dataString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+//        
+//        
+//        NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+//        [moc setParentContext:helper.managedObjectContext];
+//        
+//        [moc performBlockAndWait:^{
+//            if([NSThread isMainThread]) ALERT(@"error");
+//            NSDate *date1 = [NSDate date];
+//            for(int i =0;i<8000;i++)
+//            {
+//                Person *person = [NSEntityDescription insertNewObjectForEntityForName:@"Person"
+//                                                               inManagedObjectContext:moc];
+//                
+//                person.name = @"张玺";
+//                person.age  = [NSNumber numberWithInt:i];
+//            }
+//            NSDate *date2 = [NSDate date];
+//            NSLog(@"%f",[date2 timeIntervalSinceDate:date1]);
+//            
+//            
+//            NSLog(@"%@",dataString);
+//            
+//        }];
+//
+//        NSLog(@"------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+    
+
+}
 -(void)load
 {
     BACK(^{
@@ -154,24 +246,37 @@ static int i = 0;
     NSData *data = [NSURLConnection sendSynchronousRequest:request
                                          returningResponse:nil
                                                      error:nil];
-    [NSThread sleepForTimeInterval:1];
+    [NSThread sleepForTimeInterval:2];
     NSString *dataString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     
     
-    
-    for(int i =0;i<50;i++)
-    {
-
+        NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+        [moc setParentContext:helper.managedObjectContext];
+        
+        [moc performBlockAndWait:^{
+            if([NSThread isMainThread]) ALERT(@"error");
+            NSDate *date1 = [NSDate date];
+            for(int i =0;i<8000;i++)
+            {
+                Person *person = [NSEntityDescription insertNewObjectForEntityForName:@"Person"
+                                                               inManagedObjectContext:moc];
+                
+                person.name = @"张玺";
+                person.age  = [NSNumber numberWithInt:i];
+            }
+            NSDate *date2 = [NSDate date];
+            NSLog(@"%f",[date2 timeIntervalSinceDate:date1]);
             
-            Person *person = [helper objectForName:@"Person"];
-            person.name = @"张玺";
-            person.age  = @10;
+            
+            NSLog(@"%@",dataString);
+            
+        }];
+        
+        NSLog(@"------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+        
+        
+        
 
-    }
-    
-    
-    
-    NSLog(@"%@",dataString);
         });
 
 }

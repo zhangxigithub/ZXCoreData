@@ -16,4 +16,10 @@
 @dynamic age;
 @dynamic ownCar;
 
+
+-(void)config:(NSDictionary *)data
+{
+    self.name = data[@"name"];
+}
+
 @end

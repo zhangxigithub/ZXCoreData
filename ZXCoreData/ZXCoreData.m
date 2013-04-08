@@ -15,7 +15,7 @@
 @synthesize managedObjectContext       = _managedObjectContext;
 @synthesize tempContext                = _tempContext;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
-
+@synthesize childThreadManagedObjectContext = childThreadManagedObjectContext;
 
 - (id)init
 {
@@ -43,6 +43,45 @@
 #pragma mark -
 #pragma mark Core Data stack
 
+- (NSManagedObjectContext*)childThreadContext
+{
+    if (childThreadManagedObjectContext != nil)
+    {
+        return childThreadManagedObjectContext;
+    }
+    
+    NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
+    if (coordinator != nil)
+    {
+        childThreadManagedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+        [childThreadManagedObjectContext setPersistentStoreCoordinator:coordinator];
+    }
+    else
+    {
+        
+    }
+    
+    //[childThreadManagedObjectContext setStalenessInterval:0.0];
+    //[childThreadManagedObjectContext setMergePolicy:NSOverwriteMergePolicy];
+    
+
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mergeContextChangesForNotification:) name:NSManagedObjectContextDidSaveNotification object:childThreadManagedObjectContext];
+    
+    return childThreadManagedObjectContext;
+}
+- (void)mergeOnMainThread:(NSNotification *)aNotification
+{
+    NSLog(@"mergemergemergemergemergemergemergemergemergemergemergemergemergemergemergemergemerge");
+    [[self managedObjectContext] mergeChangesFromContextDidSaveNotification:aNotification];
+}
+
+- (void)mergeContextChangesForNotification:(NSNotification *)aNotification
+{
+    NSLog(@"?????????????????????");
+    [self performSelectorOnMainThread:@selector(mergeOnMainThread:) withObject:aNotification waitUntilDone:YES];
+}
+
 - (NSManagedObjectContext *) tempContext
 {
     if (_tempContext != nil) {
@@ -58,17 +97,22 @@
 }
 - (NSManagedObjectContext *) managedObjectContext
 {
-    @synchronized(self)
-    {
-        if (_managedObjectContext != nil) return _managedObjectContext;
+    static dispatch_once_t onceToken;
+    if (_managedObjectContext != nil)
+        return _managedObjectContext;
+    
+    dispatch_once(&onceToken, ^{
+       
+
         
         NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
         if (coordinator != nil) {
             _managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
             [_managedObjectContext setPersistentStoreCoordinator: coordinator];
         }
-        return _managedObjectContext;
-    }
+        
+    });
+    return _managedObjectContext;
 }
 
 - (NSManagedObjectModel *)managedObjectModel

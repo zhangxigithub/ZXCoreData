@@ -18,38 +18,61 @@ static int i = 0;
 -(void)next
 {
     NSLog(@"%d",i);
-    [self performSelectorInBackground:@selector(backThread) withObject:nil];
-    [self performSelectorInBackground:@selector(backThread) withObject:nil];
-    [self performSelectorInBackground:@selector(backThread) withObject:nil];
-    [self performSelectorInBackground:@selector(backThread) withObject:nil];
-    [self performSelectorInBackground:@selector(backThread) withObject:nil];
-    [self performSelectorInBackground:@selector(backThread) withObject:nil];
-    [self performSelectorInBackground:@selector(backThread) withObject:nil];
-    [self performSelectorInBackground:@selector(backThread) withObject:nil];
-    [self performSelectorInBackground:@selector(backThread) withObject:nil];
-    [self performSelectorInBackground:@selector(backThread) withObject:nil];
-    [self performSelectorInBackground:@selector(backThread) withObject:nil];
+//    [self performSelectorInBackground:@selector(backThread) withObject:nil];
+//    [self performSelectorInBackground:@selector(backThread) withObject:nil];
+//    [self performSelectorInBackground:@selector(backThread) withObject:nil];
+//    [self performSelectorInBackground:@selector(backThread) withObject:nil];
+//    [self performSelectorInBackground:@selector(backThread) withObject:nil];
+//    [self performSelectorInBackground:@selector(backThread) withObject:nil];
+//    [self performSelectorInBackground:@selector(backThread) withObject:nil];
+//    [self performSelectorInBackground:@selector(backThread) withObject:nil];
     
     
-    //[self backThread];
+    [self backThread];
 }
 
 -(void)backThread
 {
-    dispatch_queue_t q = dispatch_queue_create("com.whatever.you.want.for.data-access", 0);
     
-    __block __typeof__(self) blockSelf = self;
-    __block id dataStoredInMO = nil;
-    dispatch_sync(q, ^{
-        NSManagedObjectContext *moc = [blockSelf->helper managedObjectContext];
+    if([NSThread isMainThread])
+    {
+        //MAIN(^{
         
-        Person *person = [NSEntityDescription insertNewObjectForEntityForName:@"Person"
-                                                       inManagedObjectContext:moc];
-        person.name = @"张玺";
-        person.age  = @10;
         
-        NSLog(@"finish");
-    });
+        BACK(^{
+        for(int i=0;i<2;i++)
+        {
+            
+            Person *person = [helper objectForName:@"Person"];
+            person.name = @"张玺";
+            person.age  = @10;
+        }
+        });
+
+        /*
+            for(int i=0;i<999;i++)
+            {
+                NSManagedObjectContext *moc = [[NSManagedObjectContext alloc]
+                                               initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+                moc.parentContext = helper.managedObjectContext;
+                [moc performBlockAndWait:^{
+                    Person *person = [NSEntityDescription insertNewObjectForEntityForName:@"Person"
+                                                                   inManagedObjectContext:moc];
+                    person.name = @"张玺";
+                    person.age  = @10;
+
+                }];
+
+            }
+        
+        */
+            NSLog(@"finish");
+            
+            
+        
+       // });
+    }
+    
 
 
     /*
@@ -115,7 +138,8 @@ static int i = 0;
     
 
     NSLog(@"start");
-    [self performSelectorInBackground:@selector(load) withObject:nil];
+    //[self performSelectorInBackground:@selector(load) withObject:nil];
+    [self load];
     NSLog(@"end");
     
     
@@ -125,6 +149,7 @@ static int i = 0;
 
 -(void)load
 {
+    BACK(^{
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://zxapi.sinaapp.com/coredata.php"]];
     NSData *data = [NSURLConnection sendSynchronousRequest:request
                                          returningResponse:nil
@@ -132,32 +157,22 @@ static int i = 0;
     [NSThread sleepForTimeInterval:1];
     NSString *dataString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     
-
+    
+    
     for(int i =0;i<50;i++)
     {
-        
-        NSManagedObjectContext *moc = [[NSManagedObjectContext alloc]
-                                       initWithConcurrencyType:NSMainQueueConcurrencyType];
-        moc.parentContext = helper.managedObjectContext;
-        [moc performBlock:^{
+
             
-            
-            Person *person = [NSEntityDescription insertNewObjectForEntityForName:@"Person"
-                                                           inManagedObjectContext:moc];
+            Person *person = [helper objectForName:@"Person"];
             person.name = @"张玺";
             person.age  = @10;
-            
-            
-            // All code running in this block will be automatically serialized
-            // with respect to all other performBlock or performBlockAndWait
-            // calls for this same MOC.
-            // Access "moc" to your heart's content inside these blocks of code.
-        }];
+
     }
     
     
     
     NSLog(@"%@",dataString);
+        });
 
 }
 

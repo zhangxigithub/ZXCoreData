@@ -21,7 +21,7 @@
 {
     self = [super init];
     if (self) {
-        
+
     }
     return self;
 }
@@ -58,16 +58,17 @@
 }
 - (NSManagedObjectContext *) managedObjectContext
 {
-    if (_managedObjectContext != nil) {
+    @synchronized(self)
+    {
+        if (_managedObjectContext != nil) return _managedObjectContext;
+        
+        NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
+        if (coordinator != nil) {
+            _managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+            [_managedObjectContext setPersistentStoreCoordinator: coordinator];
+        }
         return _managedObjectContext;
     }
-    
-    NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
-    if (coordinator != nil) {
-        _managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
-        [_managedObjectContext setPersistentStoreCoordinator: coordinator];
-    }
-    return _managedObjectContext;
 }
 
 - (NSManagedObjectModel *)managedObjectModel
@@ -88,15 +89,15 @@
     NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@",kZXCoreDataFileName,kZXCoreDataFileExtension]];
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
-
+    
     if (![fileManager fileExistsAtPath:[storeURL path]]) {
-      
+        
         /**
-        NSURL *defaultStoreURL = [[NSBundle mainBundle] URLForResource:@"CoreDataBooks" withExtension:@"CDBStore"];
-        if (defaultStoreURL) {
-            [fileManager copyItemAtURL:defaultStoreURL toURL:storeURL error:NULL];
-        }
-        */
+         NSURL *defaultStoreURL = [[NSBundle mainBundle] URLForResource:@"CoreDataBooks" withExtension:@"CDBStore"];
+         if (defaultStoreURL) {
+         [fileManager copyItemAtURL:defaultStoreURL toURL:storeURL error:NULL];
+         }
+         */
     }
     
     NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption, [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
@@ -105,8 +106,8 @@
     
     NSError *error;
     if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:options error:&error]) {
-
-    
+        
+        
         NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
     }
     

@@ -17,14 +17,7 @@
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 @synthesize childThreadManagedObjectContext = _childThreadManagedObjectContext;
 
-- (id)init
-{
-    self = [super init];
-    if (self) {
 
-    }
-    return self;
-}
 
 static ZXCoreData *zxCoreData;
 +(ZXCoreData*)sharedZXCoreData
@@ -54,9 +47,6 @@ static ZXCoreData *zxCoreData;
             NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
         }
     }
-    
-    
-    
 }
 
 
@@ -75,40 +65,41 @@ static ZXCoreData *zxCoreData;
     {
         _childThreadManagedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
         [_childThreadManagedObjectContext setPersistentStoreCoordinator:coordinator];
-    }
-    else
-    {
-        
-    }
+    }else
+        NSAssert(NO, @"coordinator 不能为空");
+    
     
     [_childThreadManagedObjectContext setStalenessInterval:0.0];
     [_childThreadManagedObjectContext setMergePolicy:NSOverwriteMergePolicy];
     
-
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mergeContextChangesForNotification:) name:NSManagedObjectContextDidSaveNotification object:_childThreadManagedObjectContext];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(mergeContextChangesForNotification:)
+                                                 name:NSManagedObjectContextDidSaveNotification
+                                               object:_childThreadManagedObjectContext];
     
     return _childThreadManagedObjectContext;
 }
 - (void)mergeOnMainThread:(NSNotification *)aNotification
 {
-    NSLog(@"mergemergemergemergemergemergemergemergemergemergemergemergemergemergemergemergemerge");
+    NSLog(@"mergeOnMainThread");
     [[self managedObjectContext] mergeChangesFromContextDidSaveNotification:aNotification];
 }
 
 - (void)mergeContextChangesForNotification:(NSNotification *)aNotification
 {
-    NSLog(@"?????????????????????");
-    [self performSelectorOnMainThread:@selector(mergeOnMainThread:) withObject:aNotification waitUntilDone:YES];
+    NSLog(@"mergeContextChangesForNotification?");
+    [self performSelectorOnMainThread:@selector(mergeOnMainThread:)
+                           withObject:aNotification
+                        waitUntilDone:YES];
 }
 
 - (NSManagedObjectContext *) tempContext
 {
-    if (_tempContext != nil) {
-        return _tempContext;
-    }
+    if (_tempContext != nil) return _tempContext;
     
     NSPersistentStoreCoordinator *coordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: [self managedObjectModel]];
+    
     if (coordinator != nil) {
         _tempContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
         [_tempContext setPersistentStoreCoordinator: coordinator];
@@ -117,13 +108,12 @@ static ZXCoreData *zxCoreData;
 }
 - (NSManagedObjectContext *) managedObjectContext
 {
-    static dispatch_once_t onceToken;
-    if (_managedObjectContext != nil)
-        return _managedObjectContext;
+    static dispatch_once_t contextToken;
     
-    dispatch_once(&onceToken, ^{
+    if (_managedObjectContext != nil) return _managedObjectContext;
+    
+    dispatch_once(&contextToken, ^{
        
-
         
         NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
         if (coordinator != nil) {
@@ -137,20 +127,21 @@ static ZXCoreData *zxCoreData;
 
 - (NSManagedObjectModel *)managedObjectModel
 {
-    if (_managedObjectModel != nil) {
-        return _managedObjectModel;
-    }
+    if (_managedObjectModel != nil) return _managedObjectModel;
+
     NSURL *modelURL = [[NSBundle mainBundle] URLForResource:kZXCoreDataModalName withExtension:kZXCoreDataModalExtension];
     _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+   
     return _managedObjectModel;
 }
 
 - (NSPersistentStoreCoordinator *)persistentStoreCoordinator
 {
-    if (_persistentStoreCoordinator != nil) {
-        return _persistentStoreCoordinator;
-    }
-    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@",kZXCoreDataFileName,kZXCoreDataFileExtension]];
+    if (_persistentStoreCoordinator != nil) return _persistentStoreCoordinator;
+    
+    NSString *fileName = [NSString stringWithFormat:@"%@.%@",kZXCoreDataFileName,kZXCoreDataFileExtension];
+    
+    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:fileName];
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
     
@@ -164,7 +155,9 @@ static ZXCoreData *zxCoreData;
          */
     }
     
-    NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption, [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
+    NSDictionary *options =@{NSMigratePersistentStoresAutomaticallyOption:@YES,
+                             NSInferMappingModelAutomaticallyOption:@YES};
+    
     
     _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel: [self managedObjectModel]];
     
@@ -177,16 +170,7 @@ static ZXCoreData *zxCoreData;
     
     return _persistentStoreCoordinator;
 }
--(void)performSafeBlock:(void(^)())block
-{
-    NSManagedObjectContext *moc = [[NSManagedObjectContext alloc]
-                                   initWithConcurrencyType:NSMainQueueConcurrencyType];
-    
-    [moc performBlock:^{
-        moc.parentContext = self.managedObjectContext;
-        block();
-    }];
-}
+
 -(id)objectForName:(NSString *)name
 {
     return [NSEntityDescription insertNewObjectForEntityForName:name inManagedObjectContext:self.managedObjectContext];
@@ -195,7 +179,6 @@ static ZXCoreData *zxCoreData;
 {
     return [NSEntityDescription insertNewObjectForEntityForName:name inManagedObjectContext:self.tempContext];
 }
-
 - (NSArray *)executeFetchRequest:(NSFetchRequest *)request error:(NSError **)error
 {
     return [self.managedObjectContext executeFetchRequest:request error:error];

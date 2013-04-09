@@ -11,6 +11,7 @@
 #import "ZXCoreData.h"
 #import "Person.h"
 #import "ZXMacro.h"
+#import "Detail.h"
 
 @implementation ViewController
 
@@ -35,17 +36,31 @@
                                                              
      BACK(^{
          
+         [NSThread sleepForTimeInterval:2];
          NSManagedObjectContext *moc = [helper childThreadContext];
          
          [moc performBlockAndWait:^{
              
              NSDate *date1 = [NSDate date];
-             for(int i =0;i<500;i++)
+             for(NSDictionary *onePerson in JSON)
              {
                  Person *person = [NSEntityDescription insertNewObjectForEntityForName:@"Person"               inManagedObjectContext:moc];
                  
-                 person.name = @"core data";
-                 person.age  = [NSNumber numberWithInt:i];
+                 person.name = onePerson[@"name"];
+                 person.age  = onePerson[@"age"];
+                 
+                 
+                 for(NSDictionary *f in onePerson[@"friends"])
+                 {
+                     Person *p = [NSEntityDescription insertNewObjectForEntityForName:@"Person"               inManagedObjectContext:moc];
+                     
+                     p.name = f[@"name"];
+                     p.age  = f[@"age"];
+                    
+                     p.myfriends = person;
+
+                 }
+                 
                  [self.localData addObject:person];
              }
              [moc save:nil];
@@ -74,20 +89,11 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     self.localData = [NSMutableArray array];
+
     helper = [ZXCoreData sharedZXCoreData];
     
-    
-    
 
-    NSManagedObjectContext *moc = [helper managedObjectContext];
-    
-    for(int i=0;i<25;i++)
-    {
-        Person *p = [NSEntityDescription insertNewObjectForEntityForName:@"Person"
-                                              inManagedObjectContext:moc];
-        p.name = @"临时对象";
-    }
-    
+
     
 
     [self.tableView reloadData];
@@ -99,12 +105,24 @@
     NSArray *array = [helper.managedObjectContext executeFetchRequest:request
                                                                 error:&error];
     NSLog(@"count:%d",array.count);
-    
+    self.navigationItem.title = [NSString stringWithFormat:@"%d",array.count];
     
     [self AFLoad];
+    
+    
+    
+    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"load"
+                                                             style:UIBarButtonItemStyleBordered
+                                                            target:self
+                                                            action:@selector(load)];
+    self.navigationItem.rightBarButtonItem = item;
 }
 
-
+-(void)load
+{
+    ViewController *viewController = [[ViewController alloc] initWithNibName:@"ViewController" bundle:nil];
+    [self.navigationController pushViewController:viewController animated:YES];
+}
 
 - (void)didReceiveMemoryWarning
 {
@@ -137,7 +155,7 @@
     
     Person *p = (Person *)self.localData[indexPath.row];
     NSLog(@"%@",p.name);
-    cell.textLabel.text = [NSString stringWithFormat:@"%@-%@",p.name,p.age];
+    cell.textLabel.text = [NSString stringWithFormat:@"%@",p.name];
     
     return cell;
 }
@@ -185,13 +203,15 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
+    
+    Person *p = self.localData[indexPath.row];
+    
+    
+    Detail *detail = [[Detail alloc] initWithNibName:@"Detail" bundle:nil];
+    detail.navigationItem.title = p.name;
+    detail.localData = [p.friends allObjects];
+    
+    [self.navigationController pushViewController:detail animated:YES];
 }
 
 @end

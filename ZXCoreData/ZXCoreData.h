@@ -38,17 +38,13 @@
 
 - (NSManagedObjectContext*)childThreadContext;
 
-
--(void)performSafeBlock:(void(^)())block;
 //生成对象，并存入库
 -(id)objectForName:(NSString *)name;
 //生成临时对象，
 -(id)tempObjectForName:(NSString *)name;
+//查询
+- (NSArray *)executeFetchRequest:(NSFetchRequest *)request error:(NSError **)error;
 
 
-- (NSArray *)executeFetchRequest:(NSFetchRequest *)request error:(NSError **)error; 
-
-
-//- (NSURL *)applicationDocumentsDirectory;
 
 @end

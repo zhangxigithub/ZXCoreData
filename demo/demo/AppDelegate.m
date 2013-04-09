@@ -113,17 +113,16 @@ static int i = 0;
     helper = [ZXCoreData sharedZXCoreData];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.viewController = [[ViewController alloc] init];
+    self.viewController = [[MainVC alloc] initWithNibName:@"MainVC" bundle:nil];
     
-//    [self.viewController.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(next)]];
+
     
-    self.viewController.view.backgroundColor = [UIColor grayColor];
-    self.window.rootViewController = self.viewController;
+
+    
+    self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
     [self.window makeKeyAndVisible];
     
 
-
-    
     //----------------------
     return YES;
 }

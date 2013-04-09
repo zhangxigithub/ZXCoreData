@@ -1,25 +1,22 @@
 //
 //  Person.m
-//  core
+//  demo
 //
-//  Created by 张玺 on 13-4-6.
+//  Created by 张 玺 on 13-4-9.
 //  Copyright (c) 2013年 张玺. All rights reserved.
 //
 
 #import "Person.h"
 #import "Car.h"
+#import "Person.h"
 
 
 @implementation Person
 
-@dynamic name;
 @dynamic age;
+@dynamic name;
+@dynamic friends;
 @dynamic ownCar;
-
-
--(void)config:(NSDictionary *)data
-{
-    self.name = data[@"name"];
-}
+@dynamic myfriends;
 
 @end

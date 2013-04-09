@@ -29,20 +29,44 @@
     if(isLoad)
     {
         UIActivityIndicatorView *view = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
-        view.frame = CGRectMake(0, 0, 50, 44);
+        view.frame = CGRectMake(0, 0, 48, 44);
         [view startAnimating];
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:view];
         
     }else
     {
-        UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"load"
+        UIBarButtonItem *load = [[UIBarButtonItem alloc] initWithTitle:@"load"
                                                                  style:UIBarButtonItemStyleBordered
                                                                 target:self
                                                                 action:@selector(load)];
-        self.navigationItem.rightBarButtonItem = item;
+        UIBarButtonItem *clean = [[UIBarButtonItem alloc] initWithTitle:@"clean"
+                                                                 style:UIBarButtonItemStyleBordered
+                                                                target:self
+                                                                action:@selector(clean)];
+        self.navigationItem.rightBarButtonItems = @[load,clean];
     }
 }
 
+-(void)load
+{
+    [self AFLoad];
+}
+
+-(void)clean
+{
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Person"];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"realPerson == YES"]];
+    
+    NSArray *array = [helper.managedObjectContext executeFetchRequest:request
+                                                                error:nil];
+    
+    for(NSManagedObject *object in array)
+        [helper.managedObjectContext deleteObject:object];
+    
+    [self.localData removeAllObjects];
+    [self refreshData];
+    
+}
 -(void)AFLoad
 {
     [self load:YES];
@@ -55,7 +79,7 @@
                                                              NSLog(@"geeeeeeeeeet");
      BACK(^{
          
-//         [NSThread sleepForTimeInterval:2];
+
          NSManagedObjectContext *moc = [helper childThreadContext];
          
          [moc performBlockAndWait:^{
@@ -75,7 +99,8 @@
                      
                      p.name = f[@"name"];
                      p.age  = f[@"age"];
-                    
+                     p.realPerson = @NO;
+                     
                      p.myfriends = person;
 
                  }
@@ -89,7 +114,6 @@
     
          MAIN(^{
              [self load:NO];
-             [self.tableView reloadData];
              [self refreshData];
 
          });
@@ -115,36 +139,22 @@
 
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Person"];
     [request setPredicate:[NSPredicate predicateWithFormat:@"realPerson == YES"]];
+    
     [self.localData addObjectsFromArray:[helper executeFetchRequest:request error:nil]];
 
-    [self.tableView reloadData];
+    NSLog(@"%@",self.localData);
+    
+    
     [self refreshData];
-    
-    
-//    NSError *error;
-//    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Person"];
-//    NSArray *array = [helper.managedObjectContext executeFetchRequest:request
-//                                                                error:&error];
-//    NSLog(@"count:%d",array.count);
-//    self.navigationItem.title = [NSString stringWithFormat:@"%d",array.count];
-    
-    //[self AFLoad];
-    
-    
-    
     [self load:NO];
 }
 -(void)refreshData
 {
+    [self.tableView reloadData];
     self.navigationItem.title = [NSString stringWithFormat:@"count:%d",self.localData.count];
 }
 
--(void)load
-{
-    [self AFLoad];
-    //ViewController *viewController = [[ViewController alloc] initWithNibName:@"ViewController" bundle:nil];
-    //[self.navigationController pushViewController:viewController animated:YES];
-}
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -156,7 +166,6 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    // Return the number of sections.
     return 1;
 }
 - (float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -181,6 +190,9 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        
     }
     
     
@@ -241,6 +253,7 @@
     
     Detail *detail = [[Detail alloc] initWithNibName:@"Detail" bundle:nil];
     detail.navigationItem.title = p.name;
+    NSLog(@"f:%@",[p.friends allObjects]);
     detail.localData = [p.friends allObjects];
     
     [self.navigationController pushViewController:detail animated:YES];

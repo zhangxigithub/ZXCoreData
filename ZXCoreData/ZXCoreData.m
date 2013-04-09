@@ -40,13 +40,14 @@ static ZXCoreData *zxCoreData;
             NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
         }
     }
-    if (_childThreadManagedObjectContext != nil) {
-        if ( [_childThreadManagedObjectContext hasChanges] &&
-            ![_childThreadManagedObjectContext save:&error]) {
-            
-            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        }
-    }
+//    if (_childThreadManagedObjectContext != nil) {
+//        if ( [_childThreadManagedObjectContext hasChanges] &&
+//            ![_childThreadManagedObjectContext save:&error]) {
+//            
+//            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+//        }
+//    }
+
 }
 
 

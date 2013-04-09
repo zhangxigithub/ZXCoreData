@@ -17,7 +17,7 @@
         </fetchedProperty>
     </entity>
     <elements>
-        <element name="Car" positionX="-261" positionY="-109" width="128" height="73"/>
+        <element name="Car" positionX="-263" positionY="-45" width="128" height="73"/>
         <element name="Person" positionX="124" positionY="-45" width="128" height="176"/>
     </elements>
 </model>

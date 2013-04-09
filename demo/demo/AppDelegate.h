@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "ZXCoreData.h"
 #import "MainVC.h"
-@class ViewController;
+
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 {

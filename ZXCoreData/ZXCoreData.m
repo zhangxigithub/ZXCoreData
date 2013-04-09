@@ -15,7 +15,7 @@
 @synthesize managedObjectContext       = _managedObjectContext;
 @synthesize tempContext                = _tempContext;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
-@synthesize childThreadManagedObjectContext = childThreadManagedObjectContext;
+@synthesize childThreadManagedObjectContext = _childThreadManagedObjectContext;
 
 - (id)init
 {
@@ -26,6 +26,16 @@
     return self;
 }
 
+static ZXCoreData *zxCoreData;
++(ZXCoreData*)sharedZXCoreData
+{
+    if(zxCoreData != nil) return zxCoreData;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        zxCoreData = [[ZXCoreData alloc] init];
+    });
+    return zxCoreData;
+}
 
 
 - (void)saveContext
@@ -37,6 +47,16 @@
             NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
         }
     }
+    if (_childThreadManagedObjectContext != nil) {
+        if ( [_childThreadManagedObjectContext hasChanges] &&
+            ![_childThreadManagedObjectContext save:&error]) {
+            
+            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+        }
+    }
+    
+    
+    
 }
 
 
@@ -45,30 +65,30 @@
 
 - (NSManagedObjectContext*)childThreadContext
 {
-    if (childThreadManagedObjectContext != nil)
+    if (_childThreadManagedObjectContext != nil)
     {
-        return childThreadManagedObjectContext;
+        return _childThreadManagedObjectContext;
     }
     
     NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
     if (coordinator != nil)
     {
-        childThreadManagedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-        [childThreadManagedObjectContext setPersistentStoreCoordinator:coordinator];
+        _childThreadManagedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+        [_childThreadManagedObjectContext setPersistentStoreCoordinator:coordinator];
     }
     else
     {
         
     }
     
-    //[childThreadManagedObjectContext setStalenessInterval:0.0];
-    //[childThreadManagedObjectContext setMergePolicy:NSOverwriteMergePolicy];
+    [_childThreadManagedObjectContext setStalenessInterval:0.0];
+    [_childThreadManagedObjectContext setMergePolicy:NSOverwriteMergePolicy];
     
 
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mergeContextChangesForNotification:) name:NSManagedObjectContextDidSaveNotification object:childThreadManagedObjectContext];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mergeContextChangesForNotification:) name:NSManagedObjectContextDidSaveNotification object:_childThreadManagedObjectContext];
     
-    return childThreadManagedObjectContext;
+    return _childThreadManagedObjectContext;
 }
 - (void)mergeOnMainThread:(NSNotification *)aNotification
 {

@@ -18,11 +18,6 @@
 {
     self = [super initWithStyle:style];
     if (self) {
-        // Custom initialization
-        self.view.backgroundColor = [UIColor whiteColor];
-        self.localData = [NSMutableArray array];
-        helper = [[ZXCoreData alloc] init];
-        
 
     }
     return self;
@@ -37,48 +32,39 @@
                                                              
                                                          } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
                                                              NSLog(@"geeeeeeeeeet");
+                                                             
      BACK(^{
          
-         
-         //NSManagedObjectContext *moc = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-         //[moc setParentContext:helper.managedObjectContext];
-         
-                                                             
-                                                             
          NSManagedObjectContext *moc = [helper childThreadContext];
          
          [moc performBlockAndWait:^{
              
              NSDate *date1 = [NSDate date];
-             for(int i =0;i<8000;i++)
+             for(int i =0;i<500;i++)
              {
                  Person *person = [NSEntityDescription insertNewObjectForEntityForName:@"Person"               inManagedObjectContext:moc];
                  
-                 person.name = @"张玺";
+                 person.name = @"core data";
                  person.age  = [NSNumber numberWithInt:i];
                  [self.localData addObject:person];
              }
-             //[moc save:nil];
-             //[helper.managedObjectContext save:nil];
+             [moc save:nil];
+
              NSDate *date2 = [NSDate date];
              
              NSLog(@"%f",[date2 timeIntervalSinceDate:date1]);
-             
-             
-             
-         }];
-                                                                 MAIN(^{
-                                                                     [self.tableView reloadData];
-                                                                     NSLog(@"main");
-                                                                 });
-                                                                 
-                                                             });
+     }];
+    
+         MAIN(^{
+             [self.tableView reloadData];
+             NSLog(@"main");
+         });
+         
+ });
                                                              
                                                              
-                                                             //if ([NSThread isMainThread]) ALERT(@"ad main");
                                                              
-                                                             
-                                                         }];
+}];
     [op start];
 
 }
@@ -86,13 +72,39 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.view.backgroundColor = [UIColor whiteColor];
+    self.localData = [NSMutableArray array];
+    helper = [ZXCoreData sharedZXCoreData];
+    
+    
+    
+
+    NSManagedObjectContext *moc = [helper managedObjectContext];
+    
+    for(int i=0;i<25;i++)
+    {
+        Person *p = [NSEntityDescription insertNewObjectForEntityForName:@"Person"
+                                              inManagedObjectContext:moc];
+        p.name = @"临时对象";
+    }
+    
+    
+
+    [self.tableView reloadData];
+    
+    
+    
+    NSError *error;
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Person"];
+    NSArray *array = [helper.managedObjectContext executeFetchRequest:request
+                                                                error:&error];
+    NSLog(@"count:%d",array.count);
+    
+    
     [self AFLoad];
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
+
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -122,7 +134,7 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
-    // Configure the cell...
+    
     Person *p = (Person *)self.localData[indexPath.row];
     NSLog(@"%@",p.name);
     cell.textLabel.text = [NSString stringWithFormat:@"%@-%@",p.name,p.age];

@@ -18,14 +18,22 @@
 
 @interface ZXCoreData : NSObject
 
-@property (nonatomic, strong, readonly) NSManagedObjectModel *managedObjectModel;
-@property (atomic,strong,readonly) NSManagedObjectContext *childThreadManagedObjectContext;
-@property (nonatomic, strong, readonly) NSManagedObjectContext *managedObjectContext;
-@property (nonatomic, strong, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
+@property (atomic,strong,readonly) NSManagedObjectModel         *managedObjectModel;
+@property (atomic,strong,readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+
+//主线程使用
+@property (atomic,strong,readonly)    NSManagedObjectContext *managedObjectContext;
+//其他线程使用
+@property (atomic,strong,readonly)    NSManagedObjectContext *childThreadManagedObjectContext;
 //临时上下文，用来生成临时对象，不会被写入磁盘
-@property (nonatomic, strong, readonly) NSManagedObjectContext *tempContext;
+@property (atomic,strong,readonly)    NSManagedObjectContext *tempContext;
 
+
+
+
++(ZXCoreData*)sharedZXCoreData;
+- (void)saveContext;
 
 
 - (NSManagedObjectContext*)childThreadContext;
@@ -41,6 +49,6 @@
 - (NSArray *)executeFetchRequest:(NSFetchRequest *)request error:(NSError **)error; 
 
 
-- (NSURL *)applicationDocumentsDirectory;
-- (void)saveContext;
+//- (NSURL *)applicationDocumentsDirectory;
+
 @end

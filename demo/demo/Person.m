@@ -15,6 +15,8 @@
 
 @dynamic age;
 @dynamic name;
+@dynamic rowHeight;
+@dynamic realPerson;
 @dynamic friends;
 @dynamic ownCar;
 @dynamic myfriends;

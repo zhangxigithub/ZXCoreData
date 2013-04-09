@@ -24,9 +24,9 @@
 		33DE76511710742A00164F0C /* Car.m in Sources */ = {isa = PBXBuildFile; fileRef = 33DE764F1710742A00164F0C /* Car.m */; };
 		435A8D0E1713E79100C1AB55 /* MainVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 435A8D0C1713E79100C1AB55 /* MainVC.m */; };
 		435A8D0F1713E79100C1AB55 /* MainVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 435A8D0D1713E79100C1AB55 /* MainVC.xib */; };
-		435A8D161713F19E00C1AB55 /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = 435A8D151713F19E00C1AB55 /* Person.m */; };
 		435A8D1A1713F22800C1AB55 /* Detail.m in Sources */ = {isa = PBXBuildFile; fileRef = 435A8D181713F22700C1AB55 /* Detail.m */; };
 		435A8D1B1713F22800C1AB55 /* Detail.xib in Resources */ = {isa = PBXBuildFile; fileRef = 435A8D191713F22700C1AB55 /* Detail.xib */; };
+		435A8D2117140C3000C1AB55 /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = 435A8D2017140C3000C1AB55 /* Person.m */; };
 		43A1F7531711557400AB901E /* AFHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 43A1F7411711557400AB901E /* AFHTTPClient.m */; };
 		43A1F7541711557400AB901E /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 43A1F7431711557400AB901E /* AFHTTPRequestOperation.m */; };
 		43A1F7551711557400AB901E /* AFImageRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 43A1F7451711557400AB901E /* AFImageRequestOperation.m */; };
@@ -65,11 +65,11 @@
 		435A8D0C1713E79100C1AB55 /* MainVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainVC.m; sourceTree = "<group>"; };
 		435A8D0D1713E79100C1AB55 /* MainVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainVC.xib; sourceTree = "<group>"; };
 		435A8D101713EF2600C1AB55 /* model2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = model2.xcdatamodel; sourceTree = "<group>"; };
-		435A8D141713F19E00C1AB55 /* Person.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
-		435A8D151713F19E00C1AB55 /* Person.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
 		435A8D171713F22700C1AB55 /* Detail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Detail.h; sourceTree = "<group>"; };
 		435A8D181713F22700C1AB55 /* Detail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Detail.m; sourceTree = "<group>"; };
 		435A8D191713F22700C1AB55 /* Detail.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Detail.xib; sourceTree = "<group>"; };
+		435A8D1F17140C3000C1AB55 /* Person.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
+		435A8D2017140C3000C1AB55 /* Person.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
 		43A1F7401711557400AB901E /* AFHTTPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPClient.h; sourceTree = "<group>"; };
 		43A1F7411711557400AB901E /* AFHTTPClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPClient.m; sourceTree = "<group>"; };
 		43A1F7421711557400AB901E /* AFHTTPRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperation.h; sourceTree = "<group>"; };
@@ -185,8 +185,8 @@
 		33DE76521710761B00164F0C /* model */ = {
 			isa = PBXGroup;
 			children = (
-				435A8D141713F19E00C1AB55 /* Person.h */,
-				435A8D151713F19E00C1AB55 /* Person.m */,
+				435A8D1F17140C3000C1AB55 /* Person.h */,
+				435A8D2017140C3000C1AB55 /* Person.m */,
 				33DE76491710740000164F0C /* model.xcdatamodeld */,
 				33DE764C1710742900164F0C /* Car.h */,
 				33DE764F1710742A00164F0C /* Car.m */,
@@ -304,8 +304,8 @@
 				43A1F75B1711557400AB901E /* UIImageView+AFNetworking.m in Sources */,
 				331A88711712EDB000424A84 /* ViewController.m in Sources */,
 				435A8D0E1713E79100C1AB55 /* MainVC.m in Sources */,
-				435A8D161713F19E00C1AB55 /* Person.m in Sources */,
 				435A8D1A1713F22800C1AB55 /* Detail.m in Sources */,
+				435A8D2117140C3000C1AB55 /* Person.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -45,6 +45,8 @@
     NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Person"];
     NSArray *array = [helper.managedObjectContext executeFetchRequest:request
                                                                 error:nil];
+    
+    
     for(NSManagedObject *object in array)
         [helper.managedObjectContext deleteObject:object];
 }

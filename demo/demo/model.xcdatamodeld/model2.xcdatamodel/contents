@@ -7,7 +7,9 @@
     <entity name="Person" representedClassName="Person" syncable="YES">
         <attribute name="age" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="friends" optional="YES" toMany="YES" minCount="1" deletionRule="Nullify" destinationEntity="Person" inverseName="myfriends" inverseEntity="Person" syncable="YES"/>
+        <attribute name="realPerson" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="rowHeight" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <relationship name="friends" optional="YES" toMany="YES" minCount="1" deletionRule="Cascade" destinationEntity="Person" inverseName="myfriends" inverseEntity="Person" syncable="YES"/>
         <relationship name="myfriends" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Person" inverseName="friends" inverseEntity="Person" syncable="YES"/>
         <relationship name="ownCar" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Car" inverseName="owner" inverseEntity="Car" syncable="YES"/>
         <fetchedProperty name="drivedCar" optional="YES" syncable="YES">
@@ -16,6 +18,6 @@
     </entity>
     <elements>
         <element name="Car" positionX="-261" positionY="-109" width="128" height="73"/>
-        <element name="Person" positionX="124" positionY="-45" width="128" height="146"/>
+        <element name="Person" positionX="124" positionY="-45" width="128" height="176"/>
     </elements>
 </model>

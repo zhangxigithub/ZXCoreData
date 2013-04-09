@@ -24,8 +24,28 @@
     return self;
 }
 
+-(void)load:(BOOL)isLoad
+{
+    if(isLoad)
+    {
+        UIActivityIndicatorView *view = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+        view.frame = CGRectMake(0, 0, 50, 44);
+        [view startAnimating];
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:view];
+        
+    }else
+    {
+        UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"load"
+                                                                 style:UIBarButtonItemStyleBordered
+                                                                target:self
+                                                                action:@selector(load)];
+        self.navigationItem.rightBarButtonItem = item;
+    }
+}
+
 -(void)AFLoad
 {
+    [self load:YES];
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://zxapi.sinaapp.com/coredata.php"]];
     AFJSONRequestOperation *op;
     op = [AFJSONRequestOperation JSONRequestOperationWithRequest:request
@@ -33,21 +53,20 @@
                                                              
                                                          } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
                                                              NSLog(@"geeeeeeeeeet");
-                                                             
      BACK(^{
          
-         [NSThread sleepForTimeInterval:2];
+//         [NSThread sleepForTimeInterval:2];
          NSManagedObjectContext *moc = [helper childThreadContext];
          
          [moc performBlockAndWait:^{
              
-             NSDate *date1 = [NSDate date];
              for(NSDictionary *onePerson in JSON)
              {
                  Person *person = [NSEntityDescription insertNewObjectForEntityForName:@"Person"               inManagedObjectContext:moc];
                  
                  person.name = onePerson[@"name"];
                  person.age  = onePerson[@"age"];
+                 person.realPerson = @YES;
                  
                  
                  for(NSDictionary *f in onePerson[@"friends"])
@@ -65,14 +84,14 @@
              }
              [moc save:nil];
 
-             NSDate *date2 = [NSDate date];
-             
-             NSLog(@"%f",[date2 timeIntervalSinceDate:date1]);
+
      }];
     
          MAIN(^{
+             [self load:NO];
              [self.tableView reloadData];
-             NSLog(@"main");
+             [self refreshData];
+
          });
          
  });
@@ -94,34 +113,37 @@
     
 
 
-    
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Person"];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"realPerson == YES"]];
+    [self.localData addObjectsFromArray:[helper executeFetchRequest:request error:nil]];
 
     [self.tableView reloadData];
+    [self refreshData];
+    
+    
+//    NSError *error;
+//    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Person"];
+//    NSArray *array = [helper.managedObjectContext executeFetchRequest:request
+//                                                                error:&error];
+//    NSLog(@"count:%d",array.count);
+//    self.navigationItem.title = [NSString stringWithFormat:@"%d",array.count];
+    
+    //[self AFLoad];
     
     
     
-    NSError *error;
-    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"Person"];
-    NSArray *array = [helper.managedObjectContext executeFetchRequest:request
-                                                                error:&error];
-    NSLog(@"count:%d",array.count);
-    self.navigationItem.title = [NSString stringWithFormat:@"%d",array.count];
-    
-    [self AFLoad];
-    
-    
-    
-    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"load"
-                                                             style:UIBarButtonItemStyleBordered
-                                                            target:self
-                                                            action:@selector(load)];
-    self.navigationItem.rightBarButtonItem = item;
+    [self load:NO];
+}
+-(void)refreshData
+{
+    self.navigationItem.title = [NSString stringWithFormat:@"count:%d",self.localData.count];
 }
 
 -(void)load
 {
-    ViewController *viewController = [[ViewController alloc] initWithNibName:@"ViewController" bundle:nil];
-    [self.navigationController pushViewController:viewController animated:YES];
+    [self AFLoad];
+    //ViewController *viewController = [[ViewController alloc] initWithNibName:@"ViewController" bundle:nil];
+    //[self.navigationController pushViewController:viewController animated:YES];
 }
 
 - (void)didReceiveMemoryWarning
@@ -137,7 +159,16 @@
     // Return the number of sections.
     return 1;
 }
-
+- (float)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    Person *p = (Person *)self.localData[indexPath.row];
+    
+    if([p.rowHeight floatValue] <= 0)
+    {
+        p.rowHeight = p.age;
+    }
+    return [p.rowHeight floatValue];
+}
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
 
@@ -149,13 +180,14 @@
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
     
     
     Person *p = (Person *)self.localData[indexPath.row];
     NSLog(@"%@",p.name);
     cell.textLabel.text = [NSString stringWithFormat:@"%@",p.name];
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"height:%@",p.rowHeight];
     
     return cell;
 }

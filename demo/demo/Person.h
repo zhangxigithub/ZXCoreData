@@ -15,6 +15,8 @@
 
 @property (nonatomic, retain) NSNumber * age;
 @property (nonatomic, retain) NSString * name;
+@property (nonatomic, retain) NSNumber * rowHeight;
+@property (nonatomic, retain) NSNumber * realPerson;
 @property (nonatomic, retain) NSSet *friends;
 @property (nonatomic, retain) NSSet *ownCar;
 @property (nonatomic, retain) Person *myfriends;
